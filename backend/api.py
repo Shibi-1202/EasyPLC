@@ -50,7 +50,6 @@ async def generate_code(req: NLRequest):
         # If successful, return the generated code.
         return {
             "st_code": result.get("st_code", ""),
-            "xml_code": result.get("xml_code", ""),
         }
 
     except Exception as e:
