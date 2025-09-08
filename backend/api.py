@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
 # This import connects the API to your main backend logic file.
-from retrieve_generate import generate_full_project_from_nl
+from .retrieve_generate import generate_full_project_from_nl
 
 app = FastAPI(
     title="PLC Code Generation API",
@@ -36,22 +36,21 @@ async def generate_code(req: NLRequest):
     and its corresponding PLCopen XML representation.
     """
     try:
-        # Call the orchestrator function from retrieve_generate.py
-        result = generate_full_project_from_nl(req.nl)
+        # Unpack the two values directly from your function's return
+        st_code, xml_code = generate_full_project_from_nl(req.nl)
 
-        # Check if the backend logic returned an error.
-        if "error" in result:
-            # If so, return a 500 server error with the details.
-            raise HTTPException(status_code=500, detail=f"Failed to generate code: {result['error']}")
+        # Check for an error (our function returns (error_message, None) on failure)
+        if xml_code is None:
+            # The st_code variable now holds the error message
+            raise HTTPException(status_code=500, detail=f"Failed to generate code: {st_code}")
 
-        # If successful, return the generated code.
+        # If successful, return the generated code
         return {
-            "st_code": result.get("st_code", ""),
-            "xml_code": result.get("xml_code", ""),
+            "st_code": st_code,
+            "xml_code": xml_code,
         }
 
     except Exception as e:
-        # Catch any other unexpected errors that might occur in the API layer.
+        # Catch any other unexpected errors
         print(f"An unexpected API error occurred: {e}")
         raise HTTPException(status_code=500, detail=f"An internal server error occurred: {str(e)}")
-

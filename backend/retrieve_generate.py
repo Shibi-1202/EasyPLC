@@ -4,8 +4,8 @@ import json
 import google.generativeai as genai
 
 # Import your two helper modules for the conversion pipeline
-from st_to_ladder_lark import translate_st_to_ir
-from ir_to_plcopen_xml import translate_ir_to_xml
+from .st_to_ladder_lark import translate_st_to_ir
+from .ir_to_plcopen_xml import translate_ir_to_xml
 
 # Configure Gemini API - it's best practice to use environment variables
 genai.configure(api_key="AIzaSyAGLa_bGE3COoZ0wV0Vf_H5BLz-NhDsLd0")
