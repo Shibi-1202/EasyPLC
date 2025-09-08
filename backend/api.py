@@ -28,6 +28,9 @@ class NLRequest(BaseModel):
 class CodeResponse(BaseModel):
     st_code: str
     xml_code: str
+@app.get("/")
+def read_root():
+    return {"status": "EasyPLC Backend is running"}
 
 @app.post("/generate", response_model=CodeResponse)
 async def generate_code(req: NLRequest):
